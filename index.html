@@ -1,84 +1,399 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
     <title>Ruta de la Señal de Audio</title>
+    <link
+        rel="stylesheet"
+        href="./knobsjs.css"
+    >
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .stage { margin: 20px; padding: 10px; border: 1px solid #333; display: inline-block; vertical-align: top; }
-        .meter-container { display: flex; flex-direction: column-reverse; align-items: center; height: 100px; width: 20px; background: gray; margin: 5px; position: relative; }
-        .meter-bar { width: 100%; background: green; height: 10%; transition: height 0.2s; }
-        .peak-indicator { position: absolute; top: 0; width: 100%; height: 10%; background: red; opacity: 0; transition: opacity 0.2s; }
-        .slider-container { display: flex; flex-direction: column; align-items: center; }
-        .vertical-slider { writing-mode: bt-lr; transform: rotate(270deg); }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .stage {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            vertical-align: top;
+            min-width: 200px;
+            min-height: 140px;
+        }
+
+        .stage-body {
+            display: flex;
+            justify-content: end;
+            position: relative;
+            padding: 16px 32px 16px 32px;
+        }
+
+        .meter-container {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            height: 128px;
+            width: 20px;
+            background: gray;
+            margin: 5px;
+            position: relative;
+        }
+
+        .meter-bar {
+            width: 100%;
+            background: green;
+            height: 10%;
+            transition: height 0.2s;
+        }
+
+        .peak-indicator {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 10%;
+            background: red;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .knob {
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 75px;
+            left: -25px;
+        }
+
+        .vertical-slider {
+            writing-mode: bt-lr;
+            transform: rotate(270deg);
+        }
+
+        .vertical-range-values {
+            position: absolute;
+            left: 9px;
+            top: -55px;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: end;
+            font-size: small;
+            height: 128px;
+            width: 50px;
+        }
+
+        .zero-mark .zero-point {
+            position: absolute;
+            top: -28px;
+            left: 35px;
+            font-size: small;
+        }
+
+        .pc-level-control {
+            display: flex;
+            align-items: center;
+            max-height: fit-content;
+            margin-right: 16px;
+        }
+
+        .pc-level-control .horizontal-slider-container {}
+
+        .pc-level-control .horizontal-range-values {
+            margin-left: 5px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pc-level-control .horizontal-range-points {
+            margin-left: 8px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            font-size: xx-small;
+
+        }
     </style>
 </head>
+
 <body>
     <h2>Ruta de la Señal de Audio</h2>
-    
-    <div class="stage">Micrófono (-55 dBV)
-        <div class="meter-container" id="mic"><div class="meter-bar"></div><div class="peak-indicator"></div></div>
-    </div>
-    
-    <div class="stage">Preamplificador (-10 dBV)
-        <div class="slider-container">
-            <input type="range" class="vertical-slider" min="-20" max="20" value="0" id="gainPre" oninput="updateMeters()">
+
+    <div class='wrapper'>
+
+        <div class="stage">
+            <div class="stage-header">Micrófono (-55 dBV)</div>
+            <div class="stage-body">
+                <div
+                    class="meter-container"
+                    id="mic"
+                >
+                    <div class="meter-bar"></div>
+                    <div class="peak-indicator"></div>
+                </div>
+            </div>
         </div>
-        <div class="meter-container" id="pre"><div class="meter-bar"></div><div class="peak-indicator"></div></div>
-    </div>
-    
-    <div class="stage">Canal 1 (-10 dBV)
-        <div class="slider-container">
-            <input type="range" class="vertical-slider fader" min="-20" max="20" value="0" id="gainCanal" oninput="updateMeters()">
+
+        <div class="stage">
+            <div class="stage-header">Preamplificador (-10 dBV)</div>
+            <div class="stage-body">
+                <div class='knobContainer'>
+                    <div
+                        class="knob"
+                        id="knob1"
+                    ></div>
+                </div>
+                <!-- <div class="slider-container">
+                    <input
+                        type="range"
+                        class="vertical-slider"
+                        min="10"
+                        max="60"
+                        value="10"
+                        id="gainPre"
+                        oninput="updateMeters()"
+                    >
+                    <div class='knobContainer'>
+                        <div
+                            class="knob"
+                            id="knob1"
+                        ></div>
+                    </div>
+                    <div class="vertical-range-values">
+                        <span class="minValue">+60</span>
+                        <span class="maxValue">+10</span>
+                    </div>
+                </div> -->
+                <div
+                    class="meter-container"
+                    id="pre"
+                >
+                    <div class="meter-bar"></div>
+                    <div class="peak-indicator"></div>
+                </div>
+            </div>
         </div>
-        <div class="meter-container" id="canal"><div class="meter-bar"></div><div class="peak-indicator"></div></div>
-    </div>
-    
-    <div class="stage">Main Mix (-10 dBV)
-        <div class="slider-container">
-            <input type="range" class="vertical-slider fader" min="-20" max="20" value="0" id="gainMix" oninput="updateMeters()">
+
+        <div class="stage">
+            <div class="stage-header">Canal 1 (-10 dBV)</div>
+            <div class="stage-body">
+                <div class="slider-container">
+                    <input
+                        type="range"
+                        class="vertical-slider fader"
+                        min="-40"
+                        max="22"
+                        value="-40"
+                        id="gainCanal"
+                        oninput="updateMeters()"
+                    >
+                    <div class='zero-mark'>
+                        <span class="zero-value">0</span>
+                        <div class='zero-point'>0 ―</div>
+                    </div>
+                    <div class="vertical-range-values">
+                        <span class="minValue">+10 ―</span>
+                        <span class="maxValue">-∞ ―</span>
+                    </div>
+                </div>
+                <div
+                    class="meter-container"
+                    id="canal"
+                >
+                    <div class="meter-bar"></div>
+                    <div class="peak-indicator"></div>
+                </div>
+            </div>
         </div>
-        <div class="meter-container" id="mix"><div class="meter-bar"></div><div class="peak-indicator"></div></div>
-    </div>
-    
-    <div class="stage">Entrada PC (-10 dBFS)
-        <div class="slider-container">
-            <input type="range" class="vertical-slider" min="-20" max="20" value="0" id="gainDigital" oninput="updateMeters()">
+
+        <div class="stage">
+            <div class="stage-header">Main Mix (-10 dBV)</div>
+            <div class="stage-body">
+                <div class="slider-container">
+                    <input
+                        type="range"
+                        class="vertical-slider fader"
+                        min="-40"
+                        max="22"
+                        value="-40"
+                        id="gainMix"
+                        oninput="updateMeters()"
+                    >
+                    <div class='zero-mark'>
+                        <span class="zero-value">0</span>
+                        <div class='zero-point'>0 ―</div>
+                    </div>
+                    <div class="vertical-range-values">
+                        <span class="minValue">+10 ―</span>
+                        <span class="maxValue">-∞ ―</span>
+                    </div>
+                </div>
+                <div
+                    class="meter-container"
+                    id="mix"
+                >
+                    <div class="meter-bar"></div>
+                    <div class="peak-indicator"></div>
+                </div>
+            </div>
         </div>
-        <div class="meter-container" id="digital"><div class="meter-bar"></div><div class="peak-indicator"></div></div>
+
+        <div class="stage">
+            <div class="stage-header">Entrada PC (-10 dBFS)</div>
+            <div class="stage-body">
+                <div class="pc-level-control">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="1.0"
+                        id="Layer_1"
+                        width="20px"
+                        height="20px"
+                        viewBox="0 0 64 64"
+                        enable-background="new 0 0 64 64"
+                        xml:space="preserve"
+                    >
+                        <g>
+                            <path
+                                fill="#231F20"
+                                d="M32,44c6.629,0,12-5.371,12-12V12c0-6.629-5.371-12-12-12S20,5.371,20,12v20C20,38.629,25.371,44,32,44z"
+                            />
+                            <path
+                                fill="#231F20"
+                                d="M52,28c-2.211,0-4,1.789-4,4c0,8.836-7.164,16-16,16s-16-7.164-16-16c0-2.211-1.789-4-4-4s-4,1.789-4,4   c0,11.887,8.656,21.73,20,23.641V60c0,2.211,1.789,4,4,4s4-1.789,4-4v-4.359C47.344,53.73,56,43.887,56,32   C56,29.789,54.211,28,52,28z"
+                            />
+                        </g>
+                    </svg>
+                    <div class="horizontal-slider-container">
+                        <div class="horizontal-range-values">
+                            <span class="minValue">-</span>
+                            <span class="maxValue">+</span>
+                        </div>
+                        <div class="horizontal-range-points">
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                            <span>|</span>
+                        </div>
+                        <input
+                            type="range"
+                            class="horizontal-slider"
+                            min="-2"
+                            max="40"
+                            value="0"
+                            id="gainDigital"
+                            oninput="updateMeters()"
+                        >
+
+                    </div>
+                </div>
+
+                <div
+                    class="meter-container"
+                    id="digital"
+                >
+                    <div class="meter-bar"></div>
+                    <div class="peak-indicator"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    
+
     <script>
-        function updateMeters() {
-            let gainPre = parseInt(document.getElementById('gainPre').value) * 6; // Amplificar la ganancia del preamp
-            let gainCanal = parseInt(document.getElementById('gainCanal').value) * 0.8;
-            let gainMix = parseInt(document.getElementById('gainMix').value) * 0.8;
-            let gainDigital = parseInt(document.getElementById('gainDigital').value) * 1.5;
-            
-            let micLevel = 10; // Nivel base en %
+        function logScale (value, minDB, maxDB) {
+            let normalized = (value + 20) / 40; // Normaliza entre 0 y 1
+            let logFactor = Math.log10(9 * normalized + 1); // Ajusta la curva logarítmica
+            return minDB + (maxDB - minDB) * logFactor;
+        }
+
+        function updateMeters () {
+            let gainPre = parseInt(document.getElementById('knob1').textContent) * 1.4;
+            let gainCanal = logScale(parseInt(document.getElementById('gainCanal').value), -60, 10);
+            let gainMix = logScale(parseInt(document.getElementById('gainMix').value), -60, 10);
+            let gainDigital = parseInt(document.getElementById('gainDigital').value);
+            if (gainDigital < 0) {
+                gainDigital = gainDigital * 30
+            }
+
+
+            let micLevel = 10;
             let preLevel = Math.min(100, Math.max(5, micLevel + gainPre));
             let canalLevel = Math.min(100, Math.max(5, preLevel + gainCanal));
             let mixLevel = Math.min(100, Math.max(5, canalLevel + gainMix));
             let digitalLevel = Math.min(100, Math.max(5, mixLevel + gainDigital));
-            
+            console.log(parseInt(preLevel) + '%')
+
             let levels = { mic: micLevel, pre: preLevel, canal: canalLevel, mix: mixLevel, digital: digitalLevel };
-            
+
             Object.keys(levels).forEach(id => {
                 let meterBar = document.getElementById(id).querySelector('.meter-bar');
                 let peakIndicator = document.getElementById(id).querySelector('.peak-indicator');
                 meterBar.style.height = levels[id] + '%';
-                
+
                 if (levels[id] >= 95) {
                     peakIndicator.style.opacity = 1;
-                    setTimeout(() => {
-                        peakIndicator.style.opacity = 0;
-                    }, 1000);
+                    // setTimeout(() => {
+                    //     peakIndicator.style.opacity = 0;
+                    // }, 1000);
+                }
+                if (levels[id] < 95) {
+                    peakIndicator.style.opacity = 0;
                 }
             });
         }
-        
+
         updateMeters();
     </script>
+    <script
+        type="text/javascript"
+        src="./knob.js"
+    ></script>
+    <script>
+        let dial1 = new Knob({
+            size: "large",
+            type: "Hexagonal",
+            lowVal: 10,
+            highVal: 60,
+            value: 15,
+            sensitivity: 3,
+            lblTxtColor: "black",
+            id: "knob1",
+        });
+        dial1.getValue()
+        function knobChanged (id, val) {
+            updateMeters();
+            /* if (id == knob1) {
+              ..do something
+            } else if (id == knob2) {
+              ..do something else
+            }  */
+        }
+    </script>
 </body>
+
 </html>
