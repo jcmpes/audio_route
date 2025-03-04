@@ -53,21 +53,32 @@ body {
 .stereo-meter-horizontal {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 400px;
     height: 20px;
 }
 
+.stereo-meter-horizontal .horizontal-points {
+    position: relative;
+    top: 25px;
+    width: 420px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.stereo-meter-horizontal .horizontal-point {
+    font-size: small;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 14px;
+}
+
 .horizontal-meter-container {
-    /* position: relative; */
+    width: fit-content;
     display: flex;
     justify-content: start;
     padding-bottom: 2px;
-}
-
-#medidor-left,
-#medidor-right {
-    width: 200px;
-    height: 14px;
 }
 
 canvas {
