@@ -22,32 +22,19 @@
     <h2>Ruta de la Señal de Audio</h2>
 
     <div class='wrapper'>
-        <canvas
-            id="sound-source"
-            width="400"
-            height="100"
-        ></canvas>
-        <div class="row">
-            <div class="stage">
-                <div class="stage-header">Micrófono (-55 dBV)</div>
-                <div class="stage-body">
-                    <div class=''>
-                        <img
-                            src="./sm58.webp"
-                            width="100px"
-                            alt=""
-                        >
-                    </div>
-                    <div
-                        class="meter-container"
-                        id="mic"
-                    >
-                        <div class="meter-bar"></div>
-                        <div class="peak-indicator"></div>
-                    </div>
-                </div>
+        <div style="position: relative; width: 100%;">
+            <canvas
+                id="sound-source"
+                style="width: 100%; height: 400px;"
+            ></canvas>
+                <img
+                    id="microphone"
+                    src="./sm58.webp"
+                    style="position: absolute; width: 200px; height: 190px; cursor: grab; top:0; "
+                >
             </div>
-
+        </div>
+        <div class="row">
             <div class="stage">
                 <div class="stage-header">Preamplificador (-10 dBV)</div>
                 <div class="stage-body">
@@ -280,6 +267,8 @@
     </div>
 
     <script>
+        let micLevel = 0;
+        let initialLevel = 3;
         function logScale (value, minDB, maxDB) {
             let normalized = (value + 20) / 40; // Normaliza entre 0 y 1
             let logFactor = Math.log10(9 * normalized + 1); // Ajusta la curva logarítmica
@@ -361,12 +350,11 @@
                 gainDigital = gainDigital * 33
             }
 
-            let micLevel = 10;
             let preLevel = Math.min(100, Math.max(5, micLevel + gainPre));
             let canalLevel = Math.min(100, Math.max(5, preLevel + gainCanal));
             let mixLevel = Math.min(100, Math.max(5, canalLevel + gainMix));
 
-            let levels = { mic: micLevel, pre: preLevel, canal: canalLevel, mix: mixLevel };
+            let levels = { pre: preLevel, canal: canalLevel, mix: mixLevel };
 
             Object.keys(levels).forEach(id => {
                 let meterBar = document.getElementById(id).querySelector('.meter-bar');
@@ -380,7 +368,6 @@
                     peakIndicator.style.opacity = 0;
                 }
             });
-            console.log(mixLevel)
             let digitalLevel = Math.min(100, Math.max(5, mixLevel + gainDigital));
             if (!digitalLevel) {
                 digitalLevel = 5
@@ -412,41 +399,123 @@
     </script>
     <script>
         const canvas = document.getElementById('sound-source');
-const ctx = canvas.getContext('2d');
-const width = canvas.width;
-const height = canvas.height;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.offsetWidth;
+        const height = canvas.offsetHeight;
+        const microphone = document.getElementById('microphone');
+        const levelMeter = document.getElementById('level-meter');
 
-const sourceX = 1; // Posición fija en el centro
-const sourceY = height / 2; // Posición fija en el centro
-let radius = 30;
-let opacity = 1;
+        const sourceX = 0;
+        const sourceY = 70;
+        let radius = 30;
+        let opacity = 1;
 
-function animate() {
-  ctx.clearRect(0, 0, width, height);
+        let isDragging = false;
+        let offsetX, offsetY;
 
-  for (let i = 0; i < 3; i++) {
-    const currentRadius = radius - i * 20;
-    if (currentRadius > 0) {
-      ctx.beginPath();
-      ctx.arc(sourceX, sourceY, currentRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(0, 0, 0, ${opacity - i * 0.2})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-  }
+        microphone.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            const rect = microphone.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top + 60;
+        });
 
-  radius += 3;
-  opacity -= 0.02;
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const newLeft = e.clientX - offsetX;
+            const newTop = e.clientY - offsetY;
 
-  if (opacity < 0) {
-    radius = 30;
-    opacity = 1;
-  }
+            const canvasRect = canvas.getBoundingClientRect();
+            const micRect = microphone.getBoundingClientRect();
 
-  requestAnimationFrame(animate);
-}
+            const minLeft = canvasRect.left;
+            const maxLeft = canvasRect.right - micRect.width;
+            const minTop = canvasRect.top;
+            const maxTop = canvasRect.bottom - micRect.height;
 
-animate();
+            microphone.style.left = `${Math.min(Math.max(newLeft, minLeft), maxLeft)}px`;
+            microphone.style.top = `${Math.min(Math.max(newTop, minTop), maxTop)}px`;
+
+            // Calcula y actualiza el nivel en tiempo real
+            updateLevel();
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        function updateLevel () {
+            const canvasRect = canvas.getBoundingClientRect();
+            const micRect = microphone.getBoundingClientRect();
+            const micX = canvasRect.left - micRect.left;
+            micLevel = initialLevel * calculateAttenuationFactor(micX); // Calcula el nivel y lo escala a 0-100
+            updateMeters()
+        }
+
+        function calculateLevel (micX) {
+            const normalizedPosition = micX / canvasWidth;
+            return 1 - normalizedPosition;
+        }
+
+        function animate () {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < 3; i++) {
+                const currentRadius = radius - i * 20;
+                if (currentRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(sourceX, sourceY, currentRadius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(0, 0, 0, ${opacity - i * 0.2})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+
+            radius += 3;
+            opacity -= 0.02;
+
+            if (opacity < 0) {
+                radius = 30;
+                opacity = 1;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function calculateAttenuationFactor (micX) {
+            const canvas = document.getElementById('sound-source');
+            const canvasWidth = canvas.offsetWidth;
+
+            // Distancia máxima desde la fuente de sonido (izquierda del canvas)
+            const maxDistance = canvasWidth;
+
+            // Distancia del micrófono a la fuente de sonido
+            const distance = Math.abs(micX);
+            
+            // Distancia mínima para evitar divisiones por cero o valores infinitos
+            const minDistance = 30;
+
+            // Asegurar que la distancia sea al menos 1
+            const effectiveDistance = Math.max(distance, minDistance);
+            
+            // Calcular el factor de atenuación basado en la distancia
+            const attenuationFactor = maxDistance / effectiveDistance;
+            
+            // Ajustar el factor de atenuación para simular la atenuación cuadrática
+            const adjustedFactor = Math.pow(attenuationFactor, 2);
+            
+
+            // Convertir el factor de atenuación a decibelios (dB)
+            const attenuationDB = 10 * Math.log10(adjustedFactor);
+            
+            // Mapear el factor de atenuación a un rango de 0 a 1
+            const mappedFactor = Math.max(0, 1 + attenuationDB / 6); // Ajuste aquí
+
+            return mappedFactor;
+        }
+
+        animate();
+
     </script>
 </body>
 
