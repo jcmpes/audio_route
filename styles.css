@@ -53,45 +53,43 @@ body {
 .stereo-meter-horizontal {
     display: flex;
     flex-direction: column;
-    width: 200px;
-    height: 36px;
+    width: 300px;
+    height: 20px;
 }
 
-.meter-bar-horizontal {
-    height: 100%;
-    position: relative;
-    margin: 0 0 2px 0;
+.horizontal-meter-container {
+    /* position: relative; */
+    display: flex;
+    justify-content: start;
+    padding-bottom: 2px;
+}
+
+#medidor-left,
+#medidor-right {
+    width: 200px;
+    height: 14px;
+}
+
+canvas {
     border: 1px solid #ccc;
+}
+
+.horizontal-peak-indicator {
+    width: 3px;
+    height: 14px;
+    background-color: transparent;
+    transition: background-color 0.5s ease;
+    border: 1px solid #ccc;
+}
+
+.horizontal-peak-indicator.active {
+    background-color: red;
 }
 
 .color-layer {
     position: absolute;
     height: 100%;
     transition: width 0.1s ease;
-}
-
-.green {
-    background-color: #75D770;
-    width: 80%;
-    left: 0;
-}
-
-.yellow {
-    background-color: #F9F605;
-    width: 7%;
-    left: 80%;
-}
-
-.orange {
-    background-color: #FE8505;
-    width: 7%;
-    left: 87%;
-}
-
-.red {
-    background-color: #FF2D0A;
-    width: 6%;
-    left: 94%;
 }
 
 .peak-indicator {

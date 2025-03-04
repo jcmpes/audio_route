@@ -215,23 +215,21 @@
                 </div>
 
                 <div class="stereo-meter-horizontal">
-                    <div
-                        class="meter-bar-horizontal"
-                        id="medidor-left"
-                    >
-                        <div class="color-layer green"></div>
-                        <div class="color-layer yellow"></div>
-                        <div class="color-layer orange"></div>
-                        <div class="color-layer red"></div>
+                    <div class="horizontal-meter-container">
+                        <canvas
+                            id="medidor-left"
+                            width="200"
+                            height="20"
+                        ></canvas>
+                        <div class="horizontal-peak-indicator"></div>
                     </div>
-                    <div
-                        class="meter-bar-horizontal"
-                        id="medidor-right"
-                    >
-                        <div class="color-layer green"></div>
-                        <div class="color-layer yellow"></div>
-                        <div class="color-layer orange"></div>
-                        <div class="color-layer red"></div>
+                    <div class="horizontal-meter-container">
+                        <canvas
+                            id="medidor-right"
+                            width="200"
+                            height="20"
+                        ></canvas>
+                        <div class="horizontal-peak-indicator"></div>
                     </div>
                 </div>
             </div>
@@ -246,25 +244,42 @@
             return minDB + (maxDB - minDB) * logFactor;
         }
 
-        function updatePPM (valueL, valueR) {
-            valueL = Math.min(Math.max(valueL, 0), 100);
-            valueR = Math.min(Math.max(valueR, 0), 100);
+        function updateMedidor (value) {
+            value = Math.min(Math.max(value, 0), 100);
 
+            const drawMeter = (meterContainer, value) => {
+                const canvas = meterContainer.querySelector('canvas');
+                const ctx = canvas.getContext('2d');
+                const width = canvas.width;
+                const height = canvas.height;
+                const peakIndicator = meterContainer.querySelector('.horizontal-peak-indicator');
 
-            const updateChannel = (channelId, value) => {
-                const greenLayer = document.querySelector(`#${channelId} .green`);
-                const yellowLayer = document.querySelector(`#${channelId} .yellow`);
-                const orangeLayer = document.querySelector(`#${channelId} .orange`);
-                const redLayer = document.querySelector(`#${channelId} .red`);
+                // Limpia el canvas
+                ctx.clearRect(0, 0, width, height);
 
-                greenLayer.style.width = `${Math.min(value, 80)}%`;
-                yellowLayer.style.width = `${value > 80 ? Math.min(value - 80, 7) : 0}%`;
-                orangeLayer.style.width = `${value > 87 ? Math.min(value - 87, 7) : 0}%`;
-                redLayer.style.width = `${value > 94 ? value - 94 : 0}%`;
+                // Crea el gradiente
+                const gradient = ctx.createLinearGradient(0, 0, width, 0);
+                gradient.addColorStop(0, '#75D770');
+                gradient.addColorStop(0.8, '#F9F605');
+                gradient.addColorStop(0.87, '#FE8505');
+                gradient.addColorStop(0.94, '#FF2D0A');
+
+                // Dibuja el gradiente
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width * (value / 100), height);
+
+                // Indicador de pico
+                if (value === 100) {
+                    peakIndicator.classList.add('active');
+                } else {
+                    setTimeout(() => {
+                        peakIndicator.classList.remove('active');
+                    }, 500);
+                }
             };
 
-            updateChannel('medidor-left', valueL);
-            updateChannel('medidor-right', valueR);
+            drawMeter(document.querySelector('#medidor-left').parentNode, value);
+            drawMeter(document.querySelector('#medidor-right').parentNode, value);
         }
 
 
@@ -277,7 +292,7 @@
             let gainMix = logScale(parseInt(document.getElementById('gainMix').value), -60, 10);
             let gainDigital = parseInt(document.getElementById('gainDigital').value);
             if (gainDigital < 0) {
-                gainDigital = gainDigital * 30
+                gainDigital = gainDigital * 33
             }
 
             let micLevel = 10;
@@ -307,7 +322,7 @@
             if (!digitalLevel) {
                 digitalLevel = 5
             }
-            updatePPM(digitalLevel, digitalLevel)
+            updateMedidor(digitalLevel)
         }
 
         updateMeters();
