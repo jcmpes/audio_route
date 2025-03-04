@@ -5,7 +5,19 @@ body {
 
 .wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.row-pc {
+    margin-top: 20px;
+    display: flex;
+    justify-content: end;
 }
 
 .stage {
@@ -55,6 +67,11 @@ body {
     flex-direction: column;
     width: 400px;
     height: 20px;
+}
+
+.stage-body-pc {
+    padding: 30px;
+    min-height: 120px;
 }
 
 .stereo-meter-horizontal .horizontal-points {
@@ -208,3 +225,7 @@ canvas {
         opacity: 0;
     }
 }
+
+#sound-source {
+    border: 1px solid #ccc;
+  }
