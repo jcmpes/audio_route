@@ -12,12 +12,15 @@
         rel="stylesheet"
         href="./styles.css"
     >
+    <link
+        rel="stylesheet"
+        href="./lens.css"
+    >
 </head>
 
 <body>
     <h2>Ruta de la Señal de Audio</h2>
-
-    <div class='wrapper'>
+    <div class="">
         <div style="position: relative; width: 100%;">
             <canvas
                 id="sound-source"
@@ -25,224 +28,265 @@
             ></canvas>
             <img
                 id="microphone"
+                alt='Micrófono'
                 src="./sm58.webp"
                 style="position: absolute; width: 200px; height: 190px; cursor: grab; top:0; "
             >
         </div>
     </div>
-    <div class="row">
-        <div class="stage">
-            <div class="stage-header">Preamplificador</div>
-            <div class="stage-body pre-stage">
-                <div class='knob-container'>
-                    <div
-                        class="knob"
-                        id="knob1"
-                    ></div>
-                </div>
-                <div
-                    class="meter-container"
-                    id="pre"
-                >
-                    <div class="meter-bar"></div>
-                    <div class="peak-indicator"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stage">
-            <div class="stage-header">Salida del Canal</div>
-            <div class="stage-body">
-                <div class="slider-container">
-                    <input
-                        type="range"
-                        class="vertical-slider fader"
-                        min="-40"
-                        max="22"
-                        value="-40"
-                        id="gainCanal"
-                        oninput="updateMeters()"
-                    >
-                    <div class='zero-mark'>
-                        <span class="zero-value">0</span>
-                        <div class='zero-point'>0 ―</div>
-                    </div>
-                    <div class="vertical-range-values">
-                        <span class="minValue">+10 ―</span>
-                        <span class="maxValue">-∞ ―</span>
-                    </div>
-                </div>
-                <div
-                    class="meter-container"
-                    id="canal"
-                >
-                    <div class="meter-bar"></div>
-                    <div class="peak-indicator"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stage">
-            <div class="stage-header">Salida de Main Mix</div>
-            <div class="stage-body">
-                <div class="slider-container">
-                    <input
-                        type="range"
-                        class="vertical-slider fader"
-                        min="-40"
-                        max="22"
-                        value="-40"
-                        id="gainMix"
-                        oninput="updateMeters()"
-                    >
-                    <div class='zero-mark'>
-                        <span class="zero-value">0</span>
-                        <div class='zero-point'>0 ―</div>
-                    </div>
-                    <div class="vertical-range-values">
-                        <span class="minValue">+10 ―</span>
-                        <span class="maxValue">-∞ ―</span>
-                    </div>
-                </div>
-                <div
-                    class="meter-container"
-                    id="mix"
-                >
-                    <div class="meter-bar"></div>
-                    <div class="peak-indicator"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class='row-pc'>
-        <div class="stage">
-            <div class="stage-header">Audacity</div>
-            <div class="stage-body-pc">
-                <div class="pc-level-control">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        version="1.0"
-                        id="Layer_1"
-                        width="20px"
-                        height="20px"
-                        viewBox="0 0 64 64"
-                        enable-background="new 0 0 64 64"
-                        xml:space="preserve"
-                    >
-                        <g>
-                            <path
-                                fill="#231F20"
-                                d="M32,44c6.629,0,12-5.371,12-12V12c0-6.629-5.371-12-12-12S20,5.371,20,12v20C20,38.629,25.371,44,32,44z"
-                            />
-                            <path
-                                fill="#231F20"
-                                d="M52,28c-2.211,0-4,1.789-4,4c0,8.836-7.164,16-16,16s-16-7.164-16-16c0-2.211-1.789-4-4-4s-4,1.789-4,4   c0,11.887,8.656,21.73,20,23.641V60c0,2.211,1.789,4,4,4s4-1.789,4-4v-4.359C47.344,53.73,56,43.887,56,32   C56,29.789,54.211,28,52,28z"
-                            />
-                        </g>
-                    </svg>
-                    <div class="horizontal-slider-container">
-                        <div class="horizontal-range-values">
-                            <span class="minValue">-</span>
-                            <span class="maxValue">+</span>
+    <div class='wrapper'>
+        <div class="col">
+            <div class="row">
+                <div class="stage">
+                    <div class="stage-header">Salida del Preamplificador</div>
+                    <div class="stage-body pre-stage ">
+                        <div class='knob-container'>
+                            <div class="pre-stage-big-square lens"></div>
+                            <div
+                                class="knob"
+                                id="knob1"
+                            ></div>
                         </div>
-                        <div class="horizontal-range-points">
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
-                            <span>|</span>
+                        <div
+                            class="meter-container"
+                            id="pre"
+                        >
+                            <div class="meter-bar"></div>
+                            <div class="peak-indicator"></div>
                         </div>
-                        <input
-                            type="range"
-                            class="horizontal-slider"
-                            min="-2"
-                            max="40"
-                            value="0"
-                            id="gainDigital"
-                            oninput="updateMeters()"
+
+                    </div>
+                </div>
+                .
+            </div>
+
+            <div class="row">
+                <div class="stage">
+                    <div class="stage-header">Salida del Canal</div>
+                    <div class="stage-body">
+                        <div class="slider-container">
+                            <div class="ch-fader-big-square lens"></div>
+                            <input
+                                type="range"
+                                class="vertical-slider fader"
+                                min="-40"
+                                max="22"
+                                value="-40"
+                                id="gainCanal"
+                                oninput="updateMeters()"
+                            >
+                            <div class='zero-mark'>
+                                <span class="zero-value">0</span>
+                                <div class='zero-point'>0 ―</div>
+                            </div>
+                            <div class="vertical-range-values">
+                                <span class="minValue">+10 ―</span>
+                                <span class="maxValue">-∞ ―</span>
+                            </div>
+                        </div>
+                        <div
+                            class="meter-container"
+                            id="canal"
+                        >
+                            <div class="meter-bar"></div>
+                            <div class="peak-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stage">
+                    <div class="stage-header">Salida de Main Mix</div>
+                    <div class="stage-body">
+                        <div class="slider-container">
+                            <div class="main-fader-big-square lens"></div>
+                            <input
+                                type="range"
+                                class="vertical-slider fader"
+                                min="-40"
+                                max="22"
+                                value="-40"
+                                id="gainMix"
+                                oninput="updateMeters()"
+                            >
+                            <div class='zero-mark'>
+                                <span class="zero-value">0</span>
+                                <div class='zero-point'>0 ―</div>
+                            </div>
+                            <div class="vertical-range-values">
+                                <span class="minValue">+10 ―</span>
+                                <span class="maxValue">-∞ ―</span>
+                            </div>
+                        </div>
+                        <div
+                            class="meter-container"
+                            id="mix"
+                        >
+                            <div class="meter-bar"></div>
+                            <div class="peak-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row-pc'>
+                <div class="stage">
+                    <div class="stage-header">Audacity</div>
+                    <div class="stage-body-pc">
+                        <div class="audacity-big-square lens"></div>
+                        <div class="pc-level-control">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                version="1.0"
+                                id="Layer_1"
+                                width="20px"
+                                height="20px"
+                                viewBox="0 0 64 64"
+                                enable-background="new 0 0 64 64"
+                                xml:space="preserve"
+                            >
+                                <g>
+                                    <path
+                                        fill="#231F20"
+                                        d="M32,44c6.629,0,12-5.371,12-12V12c0-6.629-5.371-12-12-12S20,5.371,20,12v20C20,38.629,25.371,44,32,44z"
+                                    />
+                                    <path
+                                        fill="#231F20"
+                                        d="M52,28c-2.211,0-4,1.789-4,4c0,8.836-7.164,16-16,16s-16-7.164-16-16c0-2.211-1.789-4-4-4s-4,1.789-4,4   c0,11.887,8.656,21.73,20,23.641V60c0,2.211,1.789,4,4,4s4-1.789,4-4v-4.359C47.344,53.73,56,43.887,56,32   C56,29.789,54.211,28,52,28z"
+                                    />
+                                </g>
+                            </svg>
+                            <div class="horizontal-slider-container">
+                                <div class="horizontal-range-values">
+                                    <span class="minValue">-</span>
+                                    <span class="maxValue">+</span>
+                                </div>
+                                <div class="horizontal-range-points">
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                    <span>|</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    class="horizontal-slider"
+                                    min="-2"
+                                    max="40"
+                                    value="0"
+                                    id="gainDigital"
+                                    oninput="updateMeters()"
+                                >
+                            </div>
+                        </div>
+                        <div class="stereo-meter-horizontal">
+                            <div class='horizontal-ruler'>
+                                <div class="horizontal-points">
+                                    <div class='horizontal-point'>
+                                        <div style='opacity: 0;'>𝄅𝄅</div>
+                                        <div style='opacity: 0;'>-∞</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-54</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-48</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-42</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-36</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-30𝄅</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-24</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-18𝄅</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-12𝄅</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>-6</div>
+                                    </div>
+                                    <div class='horizontal-point'>
+                                        <div>𝄅𝄅</div>
+                                        <div>0𝄅</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="horizontal-meter-container">
+                                <canvas
+                                    id="medidor-left"
+                                    width="400"
+                                    height="14"
+                                ></canvas>
+                                <div class="horizontal-peak-indicator"></div>
+                            </div>
+                            <div class="horizontal-meter-container">
+                                <canvas
+                                    id="medidor-right"
+                                    width="400"
+                                    height="14"
+                                ></canvas>
+                                <div class="horizontal-peak-indicator"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col gear">
+            <div class="row mixer">
+                <div class="line-pre lens"></div>
+                <div class="line-ch-fader lens"></div>
+                <div class="line-main-fader lens"></div>
+                <div class="gear mixer img-container">
+                    <img
+                        src="./X1622USB.png"
+                        alt="Mesa de Mezclas"
+                        width='300px'
+                    >
+                    <div class="pre-stage-small-square lens">
+                    </div>
+                    <div class="ch-fader-small-square lens">
+                    </div>
+                    <div class="main-fader-small-square lens">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="audacity-container">
+                    <div class="line-audacity lens"></div>
+                    <div class="gear">
+                        <div class="audacity-small-square lens"></div>
+                        <img
+                            src="./audacity.png"
+                            alt="audacity"
+                            width='400px'
                         >
                     </div>
                 </div>
-                <div class="stereo-meter-horizontal">
-                    <div class='horizontal-ruler'>
-                        <div class="horizontal-points">
-                            <div class='horizontal-point'>
-                                <div style='opacity: 0;'>𝄅𝄅</div>
-                                <div style='opacity: 0;'>-∞</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-54</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-48</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-42</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-36</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-30𝄅</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-24</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-18𝄅</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-12𝄅</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>-6</div>
-                            </div>
-                            <div class='horizontal-point'>
-                                <div>𝄅𝄅</div>
-                                <div>0𝄅</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="horizontal-meter-container">
-                        <canvas
-                            id="medidor-left"
-                            width="400"
-                            height="14"
-                        ></canvas>
-                        <div class="horizontal-peak-indicator"></div>
-                    </div>
-                    <div class="horizontal-meter-container">
-                        <canvas
-                            id="medidor-right"
-                            width="400"
-                            height="14"
-                        ></canvas>
-                        <div class="horizontal-peak-indicator"></div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-
-
-
-
-
     </div>
 
     <script>
@@ -322,6 +366,9 @@
             if (!gainPre) {
                 gainPre = 10;
             }
+            if (gainPre > 55) {
+                gainPre = gainPre * 1.3;
+            }
             let gainCanal = logScale(parseInt(document.getElementById('gainCanal').value), -60, 10);
             let gainMix = logScale(parseInt(document.getElementById('gainMix').value), -60, 10);
             let gainDigital = parseInt(document.getElementById('gainDigital').value);
@@ -371,7 +418,7 @@
             const canvasRect = canvas.getBoundingClientRect();
             const micRect = microphone.getBoundingClientRect();
             const micX = canvasRect.left - micRect.left;
-             
+
             let dynamicLevel = initialLevel * voiceVariation
             micLevel = dynamicLevel * calculateAttenuationFactor(micX)
             updateMeters()
